@@ -65,8 +65,8 @@ int main() {
     setInitialState(&pi, 2);
 
     // File for plotting (Q1b)
-    FILE *fp = fopen("../data/simulation_Q1.csv", "w");
-    if(fp) fprintf(fp, "Step,Prob_State_2,Prob_State_12\n"); // Log specific states of interest
+    FILE *fp = fopen("../data/test.csv", "w");
+    if(fp) fprintf(fp, "Step,State2,State5,State12,State21,State25\n"); // Log specific states of interest
 
     printf("Starting simulation from State 2...\n");
 
@@ -86,7 +86,13 @@ int main() {
         t_matrix pi_next = multiplyMatrix(pi_curr, M);
 
         // Write to CSV for Plotting
-        if(fp) fprintf(fp, "%d,%f,%f\n", n, pi_next.data[0][1], pi_next.data[0][11]);
+        if(fp) fprintf(fp, "%d,%f,%f,%f,%f,%f\n", n,
+        pi_next.data[0][1],  // State 2
+        pi_next.data[0][4],  // State 5
+        pi_next.data[0][11], // State 12
+        pi_next.data[0][20], // State 21
+        pi_next.data[0][24]  // State 25
+        );
 
         // Check if this is a step requested in Q1a
         if (check_idx < 4 && n == steps_to_check[check_idx]) {
