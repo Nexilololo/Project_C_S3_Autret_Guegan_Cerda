@@ -173,23 +173,13 @@ t_partition tarjanAlgorithm(t_adjlist graph) {
     partition.classes_number = 0;
     partition.partition = NULL;
 
-    int n = graph.list_number;
     int num = 0;
 
-    // 1. Create and initialize the array of Tarjan vertices
-    t_tarjan_vertex *vertices = (t_tarjan_vertex *)malloc(n * sizeof(t_tarjan_vertex));
-    for (int i = 0; i < n; i++) {
-        vertices[i].ID = i + 1; // Assuming IDs start at 1
-        vertices[i].number = -1;
-        vertices[i].access_number = -1;
-        vertices[i].indicator = 0;
-    }
+    t_tarjan_vertex *vertices = createTarjanList(graph);
 
-    // 2. Create the stack
     t_stack stack = createEmptyStack();
 
-    // 3. Main loop: run parcours on unvisited vertices
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < graph.list_number; i++) {
         if (vertices[i].number == -1) {
             parcoursTarjan(i, &num, &graph, &stack, vertices, &partition);
         }
@@ -224,7 +214,7 @@ void parcoursTarjan(int curr, int *num, t_adjlist *graph, t_stack *stack, t_tarj
         int neighbor_index = edge->vertex - 1;
 
         if (vertex[neighbor_index].number == -1) {
-            // If neighbor has not been visited yet: recurse
+            // If neighbor has not been visited yet, it recurse
             parcoursTarjan(neighbor_index, num, graph, stack, vertex, partition);
 
             if (vertex[neighbor_index].access_number < vertex[curr].access_number) {

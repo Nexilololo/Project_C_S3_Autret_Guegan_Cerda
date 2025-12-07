@@ -43,16 +43,35 @@ void copyMatrix(t_matrix *dest, t_matrix src){
     }
 }
 
-t_matrix multiplyMatrix(t_matrix A, t_matrix B){
-    int n = A.rows;
-    t_matrix result = createZeroMatrix(n);
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            for(int k = 0; k < n; k++){
-                result.data[i][j] += A.data[i][k] * B.data[k][j];
+t_matrix multiplyMatrix(t_matrix A, t_matrix B) {
+    // 1. Validation: Columns of A must equal Rows of B
+    if (A.cols != B.rows) {
+        printf("ERROR: Dimension mismatch! A: %dx%d, B: %dx%d\n", A.rows, A.cols, B.rows, B.cols);
+        exit(1);
+    }
+
+    // 2. Create Result Matrix of correct size (A.rows x B.cols)
+    t_matrix result;
+    result.rows = A.rows;
+    result.cols = B.cols;
+
+    // Manually allocate memory because createZeroMatrix might be square-only
+    result.data = (double**)calloc(result.rows, sizeof(double*));
+    for (int i = 0; i < result.rows; i++) {
+        result.data[i] = (double*)calloc(result.cols, sizeof(double));
+    }
+
+    // 3. Perform Multiplication
+    for (int i = 0; i < result.rows; i++) {       // Rows of A
+        for (int j = 0; j < result.cols; j++) {   // Cols of B
+            double sum = 0.0;
+            for (int k = 0; k < A.cols; k++) {    // Common dimension
+                sum += A.data[i][k] * B.data[k][j];
             }
+            result.data[i][j] = sum;
         }
     }
+
     return result;
 }
 
