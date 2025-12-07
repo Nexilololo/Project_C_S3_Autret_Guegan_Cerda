@@ -24,6 +24,19 @@ void setUniformDistribution(t_matrix *pi, int *states, int count) {
     }
 }
 
+void setWeightedDistribution(t_matrix *pi, int *states, double *weights, int count) {
+    for(int j=0; j<pi->cols; j++) pi->data[0][j] = 0.0;
+    double sum = 0.0;
+    for(int i=0; i<count; i++) sum += weights[i];
+
+    for(int i=0; i<count; i++) {
+        int idx = states[i] - 1;
+        if(idx >= 0 && idx < pi->cols) {
+            pi->data[0][idx] = weights[i] / sum;
+        }
+    }
+}
+
 int main() {
 
     printf("\n=== PART 1: LOADING GRAPH ===\n");
